@@ -1,0 +1,60 @@
+{
+  "name": "sfen-viewer",
+  "version": "0.0.1",
+  "publisher": "komori-n",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "license": "MIT",
+  "displayName": "SFEN viewer",
+  "description": "Preview SFEN string as an image",
+  "icon": "image/sfen-viewer.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/komori-n/sfen-viewer.git"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "keywords": [
+    "SFEN",
+    "Shogi"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {},
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:sharp --format=cjs --platform=node",
+    "compile": "npm run esbuild-base -- --sourcemap",
+    "watch": "npm run esbuild-base -- --sourcemap --watch",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.70.0",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "@vscode/test-electron": "^2.1.5",
+    "electron-rebuild": "^3.2.9",
+    "esbuild": "^0.15.6",
+    "eslint": "^8.20.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "@fontsource/noto-serif-jp": "^4.5.11",
+    "@types/sharp": "^0.30.5",
+    "sharp": "^0.30.7",
+    "shogi.js": "^2.0.5"
+  }
+}
