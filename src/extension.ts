@@ -27,8 +27,18 @@ export async function activate(context: vscode.ExtensionContext) {
 			const shogi = new Shogi;
 			shogi.initializeFromSFENString(sfen.toString());
 
-			let svg = render(shogi);
-			let svgString = Buffer.from(svg).toString('base64');
+			const colorTheme = vscode.workspace.getConfiguration().get('sfen-viewer.color-theme');
+			let isDark = false;
+			if (colorTheme === 'dark') {
+				isDark = true;
+			} else if (colorTheme === 'default') {
+				const kind = vscode.window.activeColorTheme.kind;
+				if (kind === vscode.ColorThemeKind.Dark || kind === vscode.ColorThemeKind.HighContrast) {
+					isDark = true;
+				}
+			}
+			const svg = render(shogi, isDark);
+			const svgString = Buffer.from(svg).toString('base64');
 			return new vscode.Hover(new vscode.MarkdownString(`![](data:image/svg+xml;base64,${svgString})`));
 		}
 	});
@@ -56,7 +66,7 @@ const pieceMap = new Map<Kind, String>([
 	["RY", "龍"],
 ]);
 
-function render(shogi: Shogi): String {
+function render(shogi: Shogi, isDark: Boolean): String {
 	console.log(shogi);
 
 	const CELL_SIZE=24;
@@ -66,7 +76,7 @@ function render(shogi: Shogi): String {
 	const HALF_CELL_SIZE = CELL_SIZE / 2;
 	const IMAGE_WIDTH = CELL_SIZE * 11 + 4;
 	const DEFAULT_IMAGE_HEIGHT = CELL_SIZE * 9 + 1;
-	const TEXT_COLOR = "white";
+	const TEXT_COLOR = isDark ? "white" : "black";
 
 	let elements: Array<String> = [];
 	let height = DEFAULT_IMAGE_HEIGHT;

@@ -24,7 +24,22 @@
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
-  "contributes": {},
+  "contributes": {
+    "configuration": {
+      "title": "sfen-viewer",
+      "properties": {
+        "sfen-viewer.color-theme": {
+          "type": "string",
+          "default": "default",
+          "enum": [
+            "light",
+            "dark",
+            "default"
+          ]
+        }
+      }
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
