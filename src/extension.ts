@@ -81,6 +81,7 @@ function render(shogi: Shogi, config: RenderConfiguration): String {
 	const HAND_HEIGHT = CELL_SIZE * 3 / 4;
 	const HAND_FONT_SIZE = CELL_SIZE * 3 / 5;
 	const HALF_CELL_SIZE = CELL_SIZE / 2;
+	const HAND_X_ADJUST = CELL_SIZE / 8;
 	const IMAGE_WIDTH = CELL_SIZE * 11 + 4;
 	const DEFAULT_IMAGE_HEIGHT = CELL_SIZE * 9 + 1;
 	const TEXT_COLOR = config.isDark ? "white" : "black";
@@ -108,7 +109,7 @@ function render(shogi: Shogi, config: RenderConfiguration): String {
 			elements.push(textElement(
 				pieceMap.get(pt) ?? "",
 				(i + 1) * CELL_SIZE + HALF_CELL_SIZE,
-				(j + 1) * CELL_SIZE - 5,
+				(j + 1) * CELL_SIZE - CELL_SIZE / 5,
 				FONT_SIZE,
 				TEXT_COLOR,
 				!!color));
@@ -116,12 +117,12 @@ function render(shogi: Shogi, config: RenderConfiguration): String {
 	}
 
 	// hand pieces
-	elements.push(textElement("☖", HALF_CELL_SIZE - 3, HAND_HEIGHT, HAND_HEIGHT, TEXT_COLOR));
-	elements.push(textElement("☗", CELL_SIZE * 10 + HALF_CELL_SIZE + 3, HAND_HEIGHT, HAND_HEIGHT, TEXT_COLOR));
+	elements.push(textElement("☖", HALF_CELL_SIZE - HAND_X_ADJUST, HAND_HEIGHT, HAND_HEIGHT, TEXT_COLOR));
+	elements.push(textElement("☗", CELL_SIZE * 10 + HALF_CELL_SIZE + HAND_X_ADJUST, HAND_HEIGHT, HAND_HEIGHT, TEXT_COLOR));
 	if (shogi.turn) {
 		elements.push(`<rect x="0" y="0" width="${HAND_HEIGHT}" height="${HAND_HEIGHT + 4}" fill="#ffff0066"/>`);
 	} else {
-		elements.push(`<rect x="${10 * CELL_SIZE + 6}" y="0" width="${HAND_HEIGHT}" height="${HAND_HEIGHT + 4}" fill="#ffff0066"/>`);
+		elements.push(`<rect x="${10 * CELL_SIZE + 2 * HAND_X_ADJUST}" y="0" width="${HAND_HEIGHT}" height="${HAND_HEIGHT + 4}" fill="#ffff0066"/>`);
 	}
 	for (let i = 0; i < 2; ++i) {
 		const hand = shogi.hands[i];
@@ -135,7 +136,7 @@ function render(shogi: Shogi, config: RenderConfiguration): String {
 
 			elements.push(textElement(
 				pieceMap.get(pt) ?? "",
-				(1 - i) * 10 * CELL_SIZE + HALF_CELL_SIZE - (i * 6 - 3),
+				(1 - i) * 10 * CELL_SIZE + HALF_CELL_SIZE - (i * 2 * HAND_X_ADJUST - HAND_X_ADJUST),
 				(h + 1) * HAND_HEIGHT,
 				HAND_FONT_SIZE,
 				TEXT_COLOR));
@@ -143,7 +144,7 @@ function render(shogi: Shogi, config: RenderConfiguration): String {
 			if (count > 1) {
 				elements.push(textElement(
 					count.toString(),
-					(1 - i) * 10 * CELL_SIZE + HALF_CELL_SIZE - (i * 6 - 3),
+					(1 - i) * 10 * CELL_SIZE + HALF_CELL_SIZE - (i * 2 * HAND_X_ADJUST - HAND_X_ADJUST),
 					(h + 1) * HAND_HEIGHT,
 					HAND_FONT_SIZE,
 					TEXT_COLOR));
@@ -178,8 +179,8 @@ function textElement(text: String, x: Number, y: Number, size: Number, color: St
 				font-size="${size}"
 				fill="${color}"
 				text-anchor="middle"
-				font-family="Noto Serif JP"
-				transform="translate(${x},${(+y) - (+size) + 4}) rotate(180)"
+				font-family="serif"
+				transform="translate(${x},${(+y) - (+size) * 4 / 5}) rotate(180)"
 			>
 				${text}
 			</text>`;
@@ -190,7 +191,7 @@ function textElement(text: String, x: Number, y: Number, size: Number, color: St
 				y="${y}"
 				font-size="${size}"
 				fill="${color}"
-				font-family="Noto Serif JP"
+				font-family="serif"
 				text-anchor="middle">
 				${text}
 			</text>`;
