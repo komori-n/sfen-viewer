@@ -27,9 +27,9 @@ export async function activate(context: vscode.ExtensionContext) {
 			const shogi = new Shogi;
 			shogi.initializeFromSFENString(sfen.toString());
 
-			const colorTheme = vscode.workspace.getConfiguration().get('sfen-viewer.color-theme');
+			const colorTheme = vscode.workspace.getConfiguration().get('sfen-viewer.text-color');
 			let isDark = false;
-			if (colorTheme === 'dark') {
+			if (colorTheme === 'white') {
 				isDark = true;
 			} else if (colorTheme === 'default') {
 				const kind = vscode.window.activeColorTheme.kind;
@@ -37,7 +37,9 @@ export async function activate(context: vscode.ExtensionContext) {
 					isDark = true;
 				}
 			}
-			const svg = render(shogi, isDark);
+			const fontSize = vscode.workspace.getConfiguration().get('sfen-viewer.font-size') as Number;
+
+			const svg = render(shogi, {isDark: isDark, fontSize: fontSize});
 			const svgString = Buffer.from(svg).toString('base64');
 			return new vscode.Hover(new vscode.MarkdownString(`![](data:image/svg+xml;base64,${svgString})`));
 		}
@@ -66,17 +68,22 @@ const pieceMap = new Map<Kind, String>([
 	["RY", "龍"],
 ]);
 
-function render(shogi: Shogi, isDark: Boolean): String {
+type RenderConfiguration = {
+	isDark: Boolean,
+	fontSize: Number,
+};
+
+function render(shogi: Shogi, config: RenderConfiguration): String {
 	console.log(shogi);
 
-	const CELL_SIZE=24;
-	const FONT_SIZE=18;
-	const HAND_HEIGHT=18;
-	const HAND_FONT_SIZE=14;
+	const FONT_SIZE = +config.fontSize;
+	const CELL_SIZE = FONT_SIZE / 3 * 4;
+	const HAND_HEIGHT = CELL_SIZE * 3 / 4;
+	const HAND_FONT_SIZE = CELL_SIZE * 3 / 5;
 	const HALF_CELL_SIZE = CELL_SIZE / 2;
 	const IMAGE_WIDTH = CELL_SIZE * 11 + 4;
 	const DEFAULT_IMAGE_HEIGHT = CELL_SIZE * 9 + 1;
-	const TEXT_COLOR = isDark ? "white" : "black";
+	const TEXT_COLOR = config.isDark ? "white" : "black";
 
 	let elements: Array<String> = [];
 	let height = DEFAULT_IMAGE_HEIGHT;
@@ -171,7 +178,7 @@ function textElement(text: String, x: Number, y: Number, size: Number, color: St
 				font-size="${size}"
 				fill="${color}"
 				text-anchor="middle"
-				font-family="serif"
+				font-family="Noto Serif JP"
 				transform="translate(${x},${(+y) - (+size) + 4}) rotate(180)"
 			>
 				${text}
@@ -183,7 +190,7 @@ function textElement(text: String, x: Number, y: Number, size: Number, color: St
 				y="${y}"
 				font-size="${size}"
 				fill="${color}"
-				font-family="serif"
+				font-family="Noto Serif JP"
 				text-anchor="middle">
 				${text}
 			</text>`;
