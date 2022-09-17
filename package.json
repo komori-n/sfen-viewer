@@ -37,6 +37,10 @@
             "default"
           ]
         },
+        "sfen-viewer.file-selector": {
+          "type": "string",
+          "default": "*"
+        },
         "sfen-viewer.font-size": {
           "type": "integer",
           "default": "18"

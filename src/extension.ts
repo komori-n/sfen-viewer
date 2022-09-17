@@ -11,6 +11,14 @@ import { Kind } from "shogi.js/dist/src/Kind";
 export async function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.languages.registerHoverProvider("*", {
     async provideHover(document, position) {
+      const selector = vscode.workspace
+        .getConfiguration()
+        .get("sfen-viewer.file-selector") as string;
+      if (!vscode.languages.match(selector, document)) {
+        console.log(selector);
+        return null;
+      }
+
       const range = document.getWordRangeAtPosition(
         position,
         new RegExp("[a-zA-Z0-9 /+-]+")
