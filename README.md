@@ -6,6 +6,8 @@
 
 sfen-viewer is a VSCode plugin to visualize SFEN (Shogi Forsyth-Edwards Notation) string as an image.
 
+<img src="image/screenshot.png" width="200px">
+
 ## License
 
 MIT License
