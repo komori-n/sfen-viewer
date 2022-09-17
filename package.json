@@ -29,19 +29,33 @@
       "title": "sfen-viewer",
       "properties": {
         "sfen-viewer.text-color": {
+          "description": "Text color of generated image",
+          "required": true,
           "type": "string",
           "default": "default",
           "enum": [
             "black",
             "white",
             "default"
+          ],
+          "enumDescriptions": [
+            "Black",
+            "White",
+            "Automatically selected according to the current color theme"
           ]
         },
         "sfen-viewer.file-selector": {
-          "type": "string",
-          "default": "*"
+          "description": "Glob file patterns like '**/*.{hpp,cpp}'. If empty, enabled for all files.",
+          "required": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         },
         "sfen-viewer.font-size": {
+          "description": "The size of texts",
+          "required": true,
           "type": "integer",
           "default": "18"
         }
