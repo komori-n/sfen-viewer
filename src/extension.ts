@@ -13,7 +13,8 @@ export async function activate(context: vscode.ExtensionContext) {
     async provideHover(document, position) {
       const selectors = vscode.workspace
         .getConfiguration()
-        .get("sfen-viewer.file-selector") as Array<string>;
+        .get<string[]>("sfen-viewer.file-selector", [])
+        .map((pattern) => ({ pattern: pattern }));
       if (
         selectors.length !== 0 &&
         !vscode.languages.match(selectors, document)
